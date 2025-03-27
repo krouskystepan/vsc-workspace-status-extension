@@ -24,7 +24,6 @@ export const getGithubToken = async (): Promise<string | null> => {
     })
     return session?.accessToken ?? null
   } catch (error) {
-    console.error('Chyba při získávání GitHub tokenu:', error)
     return null
   }
 }

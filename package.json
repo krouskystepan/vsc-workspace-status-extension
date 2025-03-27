@@ -3,7 +3,11 @@
   "displayName": "vsc-workspace-status-extension",
   "publisher": "krouskystepan",
   "description": "",
-  "version": "0.0.1",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krouskystepan/vsc-workspace-status-extension.git"
+  },
   "engines": {
     "vscode": "^1.98.0"
   },

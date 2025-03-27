@@ -16,7 +16,7 @@ export const sendStatusToSite = async (startup_time: Date) => {
   const status = getStatus(startup_time)
 
   try {
-    await axios.post(
+    return await axios.post(
       API_URL,
       { status },
       {

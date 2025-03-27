@@ -18,12 +18,18 @@ export const registerListeners = (ctx: vscode.ExtensionContext) => {
   ctx.subscriptions.push(onActiveEditorChanged)
 }
 
+let interval: NodeJS.Timeout
+
 export function activate(ctx: vscode.ExtensionContext) {
   sendStatusToSite(STARTUP_TIME)
 
   registerListeners(ctx)
+
+  interval = setInterval(() => {
+    sendStatusToSite(STARTUP_TIME)
+  }, 5 * 60 * 1000)
 }
 
-export function deactivate() {
-  sendStatusToSite(STARTUP_TIME)
+export async function deactivate() {
+  clearInterval(interval)
 }
