@@ -23,3 +23,7 @@ export function activate(ctx: vscode.ExtensionContext) {
 
   registerListeners(ctx)
 }
+
+export function deactivate() {
+  sendStatusToSite(STARTUP_TIME)
+}

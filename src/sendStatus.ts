@@ -31,8 +31,6 @@ export const sendStatusToSite = async (startup_time: Date) => {
       window.showErrorMessage(
         'Invalid GitHub token. Cannot send status to site'
       )
-    } else {
-      window.showErrorMessage('Error sending status to site')
     }
   }
 }
