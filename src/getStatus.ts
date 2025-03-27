@@ -9,6 +9,7 @@ export const getStatus = (startup_time: Date) => {
     active_file: activeEditor
       ? activeEditor.document.fileName.split('/').pop()
       : 'No Active File',
+    lastUpdate: new Date().toISOString(),
   }
 
   return STATUS
