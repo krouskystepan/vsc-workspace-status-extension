@@ -27,7 +27,7 @@ export function activate(ctx: vscode.ExtensionContext) {
 
   interval = setInterval(() => {
     sendStatusToSite(STARTUP_TIME)
-  }, 5 * 60 * 1000)
+  }, 60 * 1000)
 }
 
 export async function deactivate() {
