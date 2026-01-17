@@ -1,36 +1,33 @@
 import axios from 'axios'
-import { getStatus } from './getStatus'
-import { getAPIUrlFromConfig, getGithubToken } from './utils/utils'
 import { window } from 'vscode'
+import { getStatus } from './getStatus'
+import { hasChanged } from './dedupe'
+import { getAPIUrlFromConfig, getGithubToken } from './utils/utils'
 
-export const sendStatusToSite = async (startup_time: Date) => {
+export const sendStatusToSite = async (startupTime: Date): Promise<void> => {
   const API_URL = getAPIUrlFromConfig()
-
   if (!API_URL) {
-    window.showErrorMessage('API URL not set')
     return
   }
 
-  const githubToken = await getGithubToken()
+  const token = await getGithubToken()
+  if (!token) {
+    return
+  }
 
-  const status = getStatus(startup_time)
+  const status = getStatus(startupTime)
+  if (!hasChanged(status)) {
+    return
+  }
 
   try {
-    return await axios.post(
-      API_URL,
-      { status },
-      {
-        headers: {
-          Authorization: `Bearer ${githubToken}`,
-          'Content-Type': 'application/json',
-        },
+    await axios.post(API_URL, status, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
       }
-    )
-  } catch (error) {
-    if (axios.isAxiosError(error) && error.response?.status === 403) {
-      window.showErrorMessage(
-        'Invalid GitHub token. Cannot send status to site'
-      )
-    }
+    })
+  } catch {
+    window.showWarningMessage('Failed to send workspace status')
   }
 }

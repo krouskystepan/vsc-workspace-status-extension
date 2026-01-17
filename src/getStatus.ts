@@ -1,16 +1,16 @@
 import { window, workspace } from 'vscode'
+import { WorkspaceStatus } from './types'
 
-export const getStatus = (startup_time: Date) => {
-  const activeEditor = window.activeTextEditor
+export const getStatus = (startupTime: Date): WorkspaceStatus => {
+  const editor = window.activeTextEditor
 
-  const STATUS = {
-    project_name: workspace.name || 'Unknown Project',
-    startup_time: startup_time.toISOString(),
-    active_file: activeEditor
-      ? activeEditor.document.fileName.split('/').pop()
-      : 'No Active File',
-    lastUpdate: new Date().toISOString(),
+  return {
+    projectName: workspace.name ?? 'unknown',
+    startupTime: startupTime.toISOString(),
+    activeFile: editor
+      ? (editor.document.fileName.split('/').pop() ?? null)
+      : null,
+    languageId: editor ? editor.document.languageId : null,
+    lastUpdate: new Date().toISOString()
   }
-
-  return STATUS
 }

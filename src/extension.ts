@@ -2,34 +2,63 @@ import * as vscode from 'vscode'
 import { debounce } from './utils/utils'
 import { sendStatusToSite } from './sendStatus'
 
-export const STARTUP_TIME = new Date()
-
-export const registerListeners = (ctx: vscode.ExtensionContext) => {
-  const debouncedSendStatus = debounce(() => {
-    sendStatusToSite(STARTUP_TIME)
-  }, 500)
-
-  const onActiveEditorChanged = vscode.window.onDidChangeActiveTextEditor(
-    () => {
-      debouncedSendStatus()
-    }
-  )
-
-  ctx.subscriptions.push(onActiveEditorChanged)
-}
+const IDLE_AFTER = 5 * 60_000 // 5 minutes
+const HEARTBEAT = 60_000
 
 let interval: NodeJS.Timeout
+let lastInteraction = Date.now()
 
 export function activate(ctx: vscode.ExtensionContext) {
-  sendStatusToSite(STARTUP_TIME)
+  const markActive = () => {
+    lastInteraction = Date.now()
+  }
 
-  registerListeners(ctx)
+  const send = debounce(() => {
+    if (Date.now() - lastInteraction > IDLE_AFTER) {
+      return
+    }
+    sendStatusToSite(getStartupTime(ctx))
+  }, 500)
+
+  markActive()
+  send()
+
+  ctx.subscriptions.push(
+    vscode.window.onDidChangeActiveTextEditor(() => {
+      markActive()
+      send()
+    }),
+    vscode.workspace.onDidChangeTextDocument(() => {
+      markActive()
+      send()
+    }),
+    vscode.window.onDidChangeWindowState(() => {
+      markActive()
+      send()
+    })
+  )
 
   interval = setInterval(() => {
-    sendStatusToSite(STARTUP_TIME)
-  }, 60 * 1000)
+    if (Date.now() - lastInteraction > IDLE_AFTER) {
+      return
+    }
+    sendStatusToSite(getStartupTime(ctx))
+  }, HEARTBEAT)
 }
 
-export async function deactivate() {
+export function deactivate() {
   clearInterval(interval)
+}
+
+const STARTUP_TIME_KEY = 'workspaceStatus.startupTime'
+
+function getStartupTime(ctx: vscode.ExtensionContext): Date {
+  const stored = ctx.globalState.get<string>(STARTUP_TIME_KEY)
+  if (stored) {
+    return new Date(stored)
+  }
+
+  const now = new Date()
+  ctx.globalState.update(STARTUP_TIME_KEY, now.toISOString())
+  return now
 }

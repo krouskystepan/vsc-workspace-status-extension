@@ -3,7 +3,7 @@
   "displayName": "vsc-workspace-status-extension",
   "publisher": "krouskystepan",
   "description": "",
-  "version": "0.1.1",
+  "version": "0.1.5",
   "repository": {
     "type": "git",
     "url": "https://github.com/krouskystepan/vsc-workspace-status-extension.git"
@@ -32,12 +32,17 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint",
     "lint": "eslint src",
-    "test": "vscode-test"
+    "test": "vscode-test",
+    "pretest": "npm run compile && npm run lint",
+    "vscode:prepublish": "npm run compile",
+    "version:patch": "npm version patch --no-git-tag-version",
+    "version:minor": "npm version minor --no-git-tag-version",
+    "version:major": "npm version major --no-git-tag-version",
+    "package": "npm run compile && vsce package",
+    "publish": "npm run compile && vsce publish"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
