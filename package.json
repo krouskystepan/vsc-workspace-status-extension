@@ -1,9 +1,9 @@
 {
-  "name": "vsc-workspace-status-extension",
-  "displayName": "vsc-workspace-status-extension",
-  "publisher": "krouskystepan",
-  "description": "",
-  "version": "0.1.5",
+  "name": "vsc-workspace-status",
+  "displayName": "vsc-workspace-status",
+  "publisher": "stepankrousky",
+  "version": "0.2.0",
+  "description": "A VS Code extension to display workspace status from a custom API.",
   "repository": {
     "type": "git",
     "url": "https://github.com/krouskystepan/vsc-workspace-status-extension.git"
