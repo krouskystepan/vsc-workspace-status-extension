@@ -42,7 +42,7 @@
     "version:minor": "npm version minor --no-git-tag-version",
     "version:major": "npm version major --no-git-tag-version",
     "package": "npm run compile && vsce package",
-    "publish": "npm run compile && vsce publish"
+    "publish": "npm run compile && npx vsce publish"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
